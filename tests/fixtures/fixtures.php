@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Platine\Test\Fixture;
 
-/* * *********** Container TESTS ******************** */
-
 abstract class ContainerTestAbstractClass
 {
 
