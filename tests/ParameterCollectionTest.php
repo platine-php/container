@@ -7,7 +7,7 @@ namespace Platine\Test\Container;
 use Platine\Container\Container;
 use Platine\Container\Parameter;
 use Platine\Container\ParameterCollection;
-use Platine\PlatineTestCase;
+use Platine\Dev\PlatineTestCase;
 
 /**
  * ParameterCollection class tests

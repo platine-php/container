@@ -7,7 +7,7 @@ namespace Platine\Test\Container;
 use Platine\Container\Container;
 use Platine\Container\Storage;
 use Platine\Container\StorageCollection;
-use Platine\PlatineTestCase;
+use Platine\Dev\PlatineTestCase;
 
 /**
  * StorageCollection class tests

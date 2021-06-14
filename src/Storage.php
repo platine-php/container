@@ -8,6 +8,7 @@
  * This content is released under the MIT License (MIT)
  *
  * Copyright (c) 2020 Platine Container
+ * Copyright (c) 2019 Dion Chaika
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -46,6 +47,12 @@ declare(strict_types=1);
 
 namespace Platine\Container;
 
+use Closure;
+use Platine\Container\ContainerInterface;
+use Platine\Container\Parameter;
+use Platine\Container\ParameterCollection;
+use Platine\Container\StorageInterface;
+
 class Storage implements StorageInterface
 {
 
@@ -57,9 +64,9 @@ class Storage implements StorageInterface
 
     /**
      * The storage closure
-     * @var \Closure
+     * @var Closure
      */
-    protected \Closure $closure;
+    protected Closure $closure;
 
     /**
      * Whether the instance is shared
@@ -77,13 +84,13 @@ class Storage implements StorageInterface
      * Create new parameter
      *
      * @param string $name  the name of the storage
-     * @param \Closure $closure
+     * @param Closure $closure
      * @param bool $shared
      * @param ParameterCollection $parameters
      */
     public function __construct(
         string $name,
-        \Closure $closure,
+        Closure $closure,
         bool $shared = false,
         ?ParameterCollection $parameters = null
     ) {
@@ -141,7 +148,7 @@ class Storage implements StorageInterface
      * Bind the parameter to use for the managed instance
      *
      * @param string $name  the name of parameter
-     * @param \Closure|mixed $value the parameter value
+     * @param Closure|mixed $value the parameter value
      *
      * @return self
      */

@@ -8,6 +8,7 @@
  * This content is released under the MIT License (MIT)
  *
  * Copyright (c) 2020 Platine Container
+ * Copyright (c) 2019 Dion Chaika
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -47,8 +48,9 @@ declare(strict_types=1);
 
 namespace Platine\Container;
 
-use Platine\Container\Exception\NotFoundException;
+use Closure;
 use Platine\Container\Exception\ContainerException;
+use Platine\Container\Exception\NotFoundException;
 
 class Container implements ContainerInterface
 {
@@ -73,20 +75,20 @@ class Container implements ContainerInterface
 
     /**
      * The list of resolved instances
-     * @var array
+     * @var array<string, object>
      */
     protected array $instances = [];
 
     /**
      * The current instances in phase of construction
-     * @var array
+     * @var array<string, int>
      */
     protected array $lock = [];
 
     /**
      * Create new container instance
      * @param ResolverInterface|null $resolver the resolver to use
-     * @param StorageCollection|null $storages the storages collection
+     * @param StorageCollection|null $storages the storage's collection
      */
     public function __construct(
         ?ResolverInterface $resolver = null,
@@ -107,7 +109,7 @@ class Container implements ContainerInterface
         ?StorageCollection $storages = null
     ): Container {
         if (static::$instance === null) {
-            static::$instance = new static(
+            static::$instance = new self(
                 $resolver,
                 $storages
             );
@@ -145,7 +147,7 @@ class Container implements ContainerInterface
 
     /**
      * Return the array of resolved instances
-     * @return array
+     * @return array<string, object>
      */
     public function getInstances(): array
     {
@@ -154,10 +156,12 @@ class Container implements ContainerInterface
 
     /**
      * Bind new type to the container
-     * @param  string       $id         the id of the type to bind
-     * @param  \Closure|string|mixed|null  $type       the type to bind. if null will use the $id
-     * @param  array        $parameters the array of parameters used to resolve instance of the type
-     * @param  bool $shared     whether the instance need to be shared
+     * @param  string $id the id of the type to bind
+     * @param  Closure|string|mixed|null  $type the type to bind. if null will
+     * use the $id
+     * @param  array<string, mixed>  $parameters the array of parameters
+     * used to resolve instance of the type
+     * @param  bool $shared  whether the instance need to be shared
      * @return StorageInterface
      */
     public function bind(
@@ -171,7 +175,7 @@ class Container implements ContainerInterface
 
         /** @var mixed */
         $type = $type ? $type : $id;
-        if (!($type instanceof \Closure)) {
+        if (!($type instanceof Closure)) {
             $type = $this->getClosure($type);
         }
 
@@ -189,44 +193,9 @@ class Container implements ContainerInterface
     }
 
     /**
-     * Bind interface to implement type
-     * @param  string $interface
-     * @param  \Closure|string|mixed $type   the type that implement this interface
-     * @param  array  $parameters
-     * @return StorageInterface
-     */
-    public function bindInterface(string $interface, $type, array $parameters = []): StorageInterface
-    {
-        if (!interface_exists($interface)) {
-            throw new ContainerException(sprintf('[%s] must to be an interface', $interface));
-        }
-        return $this->bind($interface, $type, $parameters, true);
-    }
-
-    /**
-     * Bind abstract class to implement type
-     * @param  string $abstract
-     * @param  \Closure|string|mixed $type   the type that implement this interface
-     * @param  array  $parameters
-     * @return StorageInterface
-     */
-    public function bindAbstract(string $abstract, $type, array $parameters = []): StorageInterface
-    {
-        try {
-            $class = new \ReflectionClass($abstract);
-            if (!$class->isAbstract()) {
-                throw new ContainerException(sprintf('[%s] must to be an abstract class', $abstract));
-            }
-        } catch (\ReflectionException $e) {
-            throw new ContainerException($e->getMessage());
-        }
-        return $this->bind($abstract, $type, $parameters, true);
-    }
-
-    /**
      * Set the new instance in to the contaner
-     * @param  object      $instance the instance to set
-     * @param  string|null $id       the id of the instance. If null will try
+     * @param  object  $instance the instance to set
+     * @param  string|null $id  the id of the instance. If null will try
      * to detect the type using get_class()
      * @return void
      */
@@ -242,8 +211,8 @@ class Container implements ContainerInterface
     /**
      * Bind the type as shared
      * @param  string $id
-     * @param  \Closure|string|mixed|null $type       the type to share
-     * @param  array  $parameters
+     * @param  Closure|string|mixed|null $type       the type to share
+     * @param  array<string, mixed>  $parameters
      * @return StorageInterface
      */
     public function share(string $id, $type = null, array $parameters = []): StorageInterface
@@ -266,7 +235,7 @@ class Container implements ContainerInterface
      * it will be make.
      *
      * @param  string $id
-     * @param  array  $parameters
+     * @param  array<string, mixed>  $parameters
      * @return mixed
      */
     public function make(string $id, array $parameters = [])
@@ -297,6 +266,7 @@ class Container implements ContainerInterface
             $this->instances[$id] = $instance;
         }
         unset($this->lock[$id]);
+
         return $instance;
     }
 
@@ -315,12 +285,12 @@ class Container implements ContainerInterface
     /**
      * Return the closure for the given type
      * @param  string|mixed $type
-     * @return \Closure
+     * @return Closure
      */
-    protected function getClosure($type): \Closure
+    protected function getClosure($type): Closure
     {
         if (is_callable($type)) {
-            return \Closure::fromCallable($type);
+            return Closure::fromCallable($type);
         } elseif (!is_string($type)) {
             return function () use ($type) {
                 return $type;

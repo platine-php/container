@@ -7,7 +7,7 @@ namespace Platine\Test\Container;
 use Platine\Container\Container;
 use Platine\Container\ConstructorResolver;
 use Platine\Container\Exception\ContainerException;
-use Platine\PlatineTestCase;
+use Platine\Dev\PlatineTestCase;
 use Platine\Test\Fixture\ContainerTestClassNoPublicConstructor;
 
 /**

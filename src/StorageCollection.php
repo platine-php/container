@@ -8,6 +8,7 @@
  * This content is released under the MIT License (MIT)
  *
  * Copyright (c) 2020 Platine Container
+ * Copyright (c) 2019 Dion Chaika
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -46,31 +47,33 @@ declare(strict_types=1);
 
 namespace Platine\Container;
 
+use InvalidArgumentException;
+
 class StorageCollection
 {
 
     /**
      * The array of storages
-     * @var array
+     * @var array<string, StorageInterface>
      */
     protected array $storages = [];
 
     /**
      * The array of all of the container storages
-     * @var array
+     * @var StorageInterface[]
      */
     protected $all = [];
 
     /**
      * Create new collection of storages
      *
-     * @param array $storages  the container storages
+     * @param StorageInterface[] $storages  the container storages
      */
     public function __construct(array $storages = [])
     {
         foreach ($storages as $storage) {
             if (!$storage instanceof StorageInterface) {
-                throw new \InvalidArgumentException(sprintf(
+                throw new InvalidArgumentException(sprintf(
                     'The container storage must be an instance of %s',
                     StorageInterface::class
                 ));
@@ -92,7 +95,7 @@ class StorageCollection
 
     /**
      * Return all array of container storages
-     * @return array the collection of storages
+     * @return StorageInterface[] the collection of storages
      */
     public function all(): array
     {

@@ -9,6 +9,7 @@ use Platine\Container\Container;
 use Platine\Container\Exception\ContainerException;
 use Platine\Container\Exception\NotFoundException;
 use Platine\Container\StorageCollection;
+use Platine\Dev\PlatineTestCase;
 use Platine\Test\Fixture\ContainerTestAbstractClass;
 use Platine\Test\Fixture\ContainerTestClass;
 use Platine\Test\Fixture\ContainerTestClassConstructorParamDefaultValue;
@@ -23,7 +24,6 @@ use Platine\Test\Fixture\ContainerTestClassWithoutConstructorParam;
 use Platine\Test\Fixture\ContainerTestDelegate;
 use Platine\Test\Fixture\ContainerTestInterface;
 use Platine\Test\Fixture\ContainerTestInterfaceImpl;
-use Platine\PlatineTestCase;
 use stdClass;
 
 /**
@@ -76,7 +76,7 @@ class ContainerTest extends PlatineTestCase
     public function testBind(): void
     {
         $c = new Container();
-        $c->bindInterface(
+        $c->bind(
             ContainerTestInterface::class,
             ContainerTestInterfaceImpl::class
         );
@@ -108,41 +108,18 @@ class ContainerTest extends PlatineTestCase
             null,
             array('a' => ContainerTestInterfaceImpl::class)
         );
-        $c->bindInterface(ContainerTestInterface::class, ContainerTestInterfaceImpl::class);
+        $c->bind(ContainerTestInterface::class, ContainerTestInterfaceImpl::class);
         $obj = $c->get(ContainerTestClassInterfaceDependency::class);
         $this->assertInstanceOf(ContainerTestClassInterfaceDependency::class, $obj);
     }
 
-    public function testBindInterfaceInvalid(): void
-    {
-        $this->expectException(ContainerException::class);
-        $c = new Container();
-        $c->bindInterface(ContainerTestInterfaceImpl::class, ContainerTestInterfaceImpl::class);
-    }
 
     public function testBindAbstract(): void
     {
         $c = new Container();
-        $c->bindAbstract(ContainerTestAbstractClass::class, ContainerTestClassWithoutConstructor::class);
+        $c->bind(ContainerTestAbstractClass::class, ContainerTestClassWithoutConstructor::class);
         $obj = $c->get(ContainerTestAbstractClass::class);
         $this->assertInstanceOf(ContainerTestClassWithoutConstructor::class, $obj);
-    }
-
-    public function testBindAbstractClassNotFound(): void
-    {
-        $this->expectException(ContainerException::class);
-        $c = new Container();
-        $c->bindAbstract('not_found_class', ContainerTestClassWithoutConstructor::class);
-    }
-
-    public function testBindAbstractClassIsNotAbstract(): void
-    {
-        $this->expectException(ContainerException::class);
-        $c = new Container();
-        $c->bindAbstract(
-            ContainerTestClassWithoutConstructor::class,
-            ContainerTestClassWithoutConstructor::class
-        );
     }
 
     public function testBindUsingDirectClosure(): void
@@ -153,6 +130,28 @@ class ContainerTest extends PlatineTestCase
         });
         $o = $c->get(ContainerTestClassWithoutConstructor::class);
         $this->assertInstanceOf('\\stdClass', $o);
+    }
+
+    public function testBindUsingClosureWithContainerInstance(): void
+    {
+        $c = new Container();
+        $c->bind(
+            ContainerTestInterface::class,
+            ContainerTestInterfaceImpl::class
+        );
+
+        $c->bind(
+            ContainerTestClassInterfaceDependency::class,
+            function (Container $o) {
+                return new ContainerTestClassInterfaceDependency(
+                    $o->get(ContainerTestInterface::class)
+                );
+            }
+        );
+        $this->assertInstanceOf(
+            ContainerTestClassInterfaceDependency::class,
+            $c->get(ContainerTestClassInterfaceDependency::class)
+        );
     }
 
     public function testBindUsingSimpleValue(): void
@@ -289,6 +288,7 @@ class ContainerTest extends PlatineTestCase
         $a = 23;
         $b = 2.3;
         $containter = new Container();
+        $containter->bind(ContainerTestClassWithoutConstructor::class);
         $containter->bind(ContainerTestClass::class, null, array(
             'a' => $a,
             'b' => $b
@@ -302,6 +302,7 @@ class ContainerTest extends PlatineTestCase
     public function testGetConstructorUsingDefaultValueForParamClass(): void
     {
         $c = new Container();
+        $c->bind(ContainerTestClassWithoutConstructorParam::class);
         $c->bind(ContainerTestClassConstructorParamDefaultValueClass::class);
         $o = $c->get(ContainerTestClassConstructorParamDefaultValueClass::class);
         $this->assertInstanceOf(ContainerTestClassConstructorParamDefaultValueClass::class, $o);

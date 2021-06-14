@@ -8,6 +8,7 @@
  * This content is released under the MIT License (MIT)
  *
  * Copyright (c) 2020 Platine Container
+ * Copyright (c) 2019 Dion Chaika
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -46,6 +47,9 @@ declare(strict_types=1);
 
 namespace Platine\Container;
 
+use Platine\Container\ContainerInterface;
+use Platine\Container\ParameterCollection;
+
 interface ResolverInterface
 {
 
@@ -53,7 +57,7 @@ interface ResolverInterface
      * Resolve the instance of the given type
      *
      * @param  ContainerInterface $container
-     * @param  string $string the name of the type to resolve
+     * @param  string $type the name of the type to resolve
      * @param  ParameterCollection $parameters the instance of container collection
      *
      * @return mixed

@@ -8,6 +8,7 @@
  * This content is released under the MIT License (MIT)
  *
  * Copyright (c) 2020 Platine Container
+ * Copyright (c) 2019 Dion Chaika
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -46,6 +47,8 @@ declare(strict_types=1);
 
 namespace Platine\Container;
 
+use Closure;
+
 class Parameter implements ParameterInterface
 {
 
@@ -57,7 +60,7 @@ class Parameter implements ParameterInterface
 
     /**
      * The parameter value
-     * @var \Closure|mixed
+     * @var Closure|mixed
      */
     protected $value;
 
@@ -65,7 +68,7 @@ class Parameter implements ParameterInterface
      * Create new parameter
      *
      * @param string $name  the name of the parameter
-     * @param \Closure|mixed $value the parameter value
+     * @param Closure|mixed $value the parameter value
      */
     public function __construct(string $name, $value)
     {
@@ -86,6 +89,6 @@ class Parameter implements ParameterInterface
      */
     public function getValue(ContainerInterface $container)
     {
-        return ($this->value instanceof \Closure) ? ($this->value)($container) : $this->value;
+        return ($this->value instanceof Closure) ? ($this->value)($container) : $this->value;
     }
 }

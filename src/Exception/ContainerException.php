@@ -8,6 +8,7 @@
  * This content is released under the MIT License (MIT)
  *
  * Copyright (c) 2020 Platine Container
+ * Copyright (c) 2019 Dion Chaika
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,7 +33,9 @@ declare(strict_types=1);
 
 namespace Platine\Container\Exception;
 
-class ContainerException extends \Exception
+use Exception;
+
+class ContainerException extends Exception
 {
 
 }

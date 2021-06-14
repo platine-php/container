@@ -8,6 +8,7 @@
  * This content is released under the MIT License (MIT)
  *
  * Copyright (c) 2020 Platine Container
+ * Copyright (c) 2019 Dion Chaika
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -46,36 +47,39 @@ declare(strict_types=1);
 
 namespace Platine\Container;
 
+use InvalidArgumentException;
+use Platine\Container\ParameterCollection;
+use Platine\Container\ParameterInterface;
+
 class ParameterCollection
 {
 
     /**
      * The array of parameters
-     * @var array
+     * @var array<string, ParameterInterface>
      */
     protected array $parameters = [];
 
     /**
      * The array of all of the container parameters
-     * @var array
+     * @var ParameterInterface[]
      */
     protected $all = [];
 
     /**
      * Create new collection of parameters
      *
-     * @param array $parameters  the container parameters
+     * @param ParameterInterface[] $parameters  the container parameters
      */
     public function __construct(array $parameters = [])
     {
         foreach ($parameters as $parameter) {
             if (!$parameter instanceof ParameterInterface) {
-                throw new \InvalidArgumentException(sprintf(
+                throw new InvalidArgumentException(sprintf(
                     'The container parameter must be an instance of %s',
                     ParameterInterface::class
                 ));
             }
-
             $this->add($parameter);
         }
     }
@@ -92,7 +96,7 @@ class ParameterCollection
 
     /**
      * Return all array of container parameters
-     * @return array the collection of parameters
+     * @return ParameterInterface[] the collection of parameters
      */
     public function all(): array
     {
