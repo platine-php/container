@@ -109,7 +109,7 @@ class Container implements ContainerInterface
         ?StorageCollection $storages = null
     ): Container {
         if (static::$instance === null) {
-            static::$instance = new self(
+            static::$instance = new static(
                 $resolver,
                 $storages
             );
