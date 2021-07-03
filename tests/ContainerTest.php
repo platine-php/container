@@ -16,6 +16,7 @@ use Platine\Test\Fixture\ContainerTestClassConstructorParamDefaultValue;
 use Platine\Test\Fixture\ContainerTestClassConstructorParamDefaultValueClass;
 use Platine\Test\Fixture\ContainerTestClassConstructorVariadicParam;
 use Platine\Test\Fixture\ContainerTestClassCyclicOne;
+use Platine\Test\Fixture\ContainerTestClassCyclicTwo;
 use Platine\Test\Fixture\ContainerTestClassInterfaceDependency;
 use Platine\Test\Fixture\ContainerTestClassNoPublicConstructor;
 use Platine\Test\Fixture\ContainerTestClassUsingGlobalValue;
@@ -50,17 +51,19 @@ class ContainerTest extends PlatineTestCase
     public function testConstructionUsingCustomResolver(): void
     {
         $cr = new ConstructorResolver();
-        $c = new Container($cr);
+        $c = new Container();
+        $c->setResolver($cr);
         $this->assertInstanceOf(ConstructorResolver::class, $cr);
         $this->assertEquals($cr, $c->getResolver());
     }
 
     public function testConstructionUsingCustomStorageCollection(): void
     {
-        $cr = new StorageCollection();
-        $c = new Container(null, $cr);
-        $this->assertInstanceOf(StorageCollection::class, $cr);
-        $this->assertEquals($cr, $c->getStorages());
+        $sc = new StorageCollection();
+        $c = new Container();
+        $c->setStorages($sc);
+        $this->assertInstanceOf(StorageCollection::class, $sc);
+        $this->assertEquals($sc, $c->getStorages());
     }
 
     public function testClone(): void
@@ -213,6 +216,7 @@ class ContainerTest extends PlatineTestCase
         $this->expectException(ContainerException::class);
         $c = new Container();
         $c->bind(ContainerTestClassCyclicOne::class);
+        $c->bind(ContainerTestClassCyclicTwo::class);
         $c->get(ContainerTestClassCyclicOne::class);
     }
 
@@ -221,6 +225,13 @@ class ContainerTest extends PlatineTestCase
         $this->expectException(NotFoundException::class);
         $c = new Container();
         $c->get(ContainerTestClassWithoutConstructor::class);
+    }
+
+    public function testMake(): void
+    {
+        $c = new Container();
+        $o = $c->make(ContainerTestClassWithoutConstructor::class);
+        $this->assertInstanceOf(ContainerTestClassWithoutConstructor::class, $o);
     }
 
     public function testGetConstructorIsNotPublic(): void

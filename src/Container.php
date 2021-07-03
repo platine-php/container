@@ -87,32 +87,45 @@ class Container implements ContainerInterface
 
     /**
      * Create new container instance
-     * @param ResolverInterface|null $resolver the resolver to use
-     * @param StorageCollection|null $storages the storage's collection
      */
-    public function __construct(
-        ?ResolverInterface $resolver = null,
-        ?StorageCollection $storages = null
-    ) {
-        $this->resolver = $resolver ? $resolver : new ConstructorResolver();
-        $this->storages = $storages ? $storages : new StorageCollection();
+    public function __construct()
+    {
+        $this->resolver =  new ConstructorResolver();
+        $this->storages =  new StorageCollection();
+    }
+
+    /**
+     *
+     * @param ResolverInterface $resolver
+     * @return $this
+     */
+    public function setResolver(ResolverInterface $resolver): self
+    {
+        $this->resolver = $resolver;
+
+        return $this;
+    }
+
+    /**
+     *
+     * @param StorageCollection $storages
+     * @return $this
+     */
+    public function setStorages(StorageCollection $storages): self
+    {
+        $this->storages = $storages;
+
+        return $this;
     }
 
     /**
      * Return the global instance of the container
-     * @param ResolverInterface|null $resolver
-     * @param StorageCollection|null $storages
-     * @return Container
+     * @return $this
      */
-    public static function getInstance(
-        ?ResolverInterface $resolver = null,
-        ?StorageCollection $storages = null
-    ): Container {
+    public static function getInstance(): self
+    {
         if (static::$instance === null) {
-            static::$instance = new static(
-                $resolver,
-                $storages
-            );
+            static::$instance = new static();
         }
 
         return static::$instance;

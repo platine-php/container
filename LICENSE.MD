@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 202 Platine Container
+Copyright (c) 2020 Platine Container
 Copyright (c) 2019 Dion Chaika
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
