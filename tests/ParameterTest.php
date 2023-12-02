@@ -16,7 +16,6 @@ use Platine\Dev\PlatineTestCase;
  */
 class ParameterTest extends PlatineTestCase
 {
-
     public function testSimpleParameter(): void
     {
         $name = 'foo';

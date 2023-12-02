@@ -52,7 +52,6 @@ use Platine\Container\ParameterCollection;
 
 interface ResolverInterface
 {
-
     /**
      * Resolve the instance of the given type
      *

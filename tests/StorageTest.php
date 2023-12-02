@@ -18,7 +18,6 @@ use Platine\Dev\PlatineTestCase;
  */
 class StorageTest extends PlatineTestCase
 {
-
     public function testConstructionDefault(): void
     {
         $name = 'foo';

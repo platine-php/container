@@ -54,7 +54,6 @@ use Platine\Container\Exception\NotFoundException;
 
 class Container implements ContainerInterface
 {
-
     /**
      * The container global instance
      * @var Container|null

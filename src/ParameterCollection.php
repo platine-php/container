@@ -53,7 +53,6 @@ use Platine\Container\ParameterInterface;
 
 class ParameterCollection
 {
-
     /**
      * The array of parameters
      * @var array<string, ParameterInterface>

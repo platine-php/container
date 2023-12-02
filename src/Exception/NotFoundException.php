@@ -35,5 +35,4 @@ namespace Platine\Container\Exception;
 
 class NotFoundException extends ContainerException
 {
-
 }

@@ -55,7 +55,6 @@ use Platine\Container\StorageInterface;
 
 class Storage implements StorageInterface
 {
-
     /**
      * The storage name
      * @var string

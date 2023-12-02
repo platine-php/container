@@ -51,7 +51,6 @@ use Closure;
 
 class Parameter implements ParameterInterface
 {
-
     /**
      * The parameter name
      * @var string

@@ -37,5 +37,4 @@ use Exception;
 
 class ContainerException extends Exception
 {
-
 }

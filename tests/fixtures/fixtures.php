@@ -6,7 +6,6 @@ namespace Platine\Test\Fixture;
 
 abstract class ContainerTestAbstractClass
 {
-
     public function __construct()
     {
     }
@@ -14,12 +13,10 @@ abstract class ContainerTestAbstractClass
 
 final class ContainerTesFinalClass
 {
-
 }
 
 class ContainerTestClass
 {
-
     public $a;
     public $b;
     public $c;
@@ -42,7 +39,6 @@ class ContainerTestClass
 
 class ContainerTestClassCyclicOne
 {
-
     public function __construct(ContainerTestClassCyclicTwo $a)
     {
     }
@@ -50,7 +46,6 @@ class ContainerTestClassCyclicOne
 
 class ContainerTestClassCyclicTwo
 {
-
     public function __construct(ContainerTestClassCyclicOne $a)
     {
     }
@@ -58,7 +53,6 @@ class ContainerTestClassCyclicTwo
 
 class ContainerTestClassInterfaceDependency
 {
-
     public $a = null;
 
     public function __construct(ContainerTestInterface $a)
@@ -69,7 +63,6 @@ class ContainerTestClassInterfaceDependency
 
 class ContainerTestClassNoPublicConstructor
 {
-
     private function __construct()
     {
     }
@@ -77,7 +70,6 @@ class ContainerTestClassNoPublicConstructor
 
 class ContainerTestClassUsingGlobalValue
 {
-
     public $value = 1;
 
     public function __construct(int $globalValue)
@@ -88,7 +80,6 @@ class ContainerTestClassUsingGlobalValue
 
 class ContainerTestClassWithoutConstructor
 {
-
     public $a;
 
     public function foo(): void
@@ -99,7 +90,6 @@ class ContainerTestClassWithoutConstructor
 
 class ContainerTestClassWithoutConstructorParam
 {
-
     public function __construct()
     {
     }
@@ -107,7 +97,6 @@ class ContainerTestClassWithoutConstructorParam
 
 class ContainerTestClassConstructorVariadicParam
 {
-
     public $a = 0;
 
     public function __construct(?int ...$a)
@@ -118,13 +107,11 @@ class ContainerTestClassConstructorVariadicParam
 
 interface ContainerTestInterface
 {
-
     public function foo(): ?string;
 }
 
 class ContainerTestInterfaceImpl implements ContainerTestInterface
 {
-
     public function foo(): ?string
     {
         return null;
@@ -133,7 +120,6 @@ class ContainerTestInterfaceImpl implements ContainerTestInterface
 
 class ContainerTestClassGetUsingDefine
 {
-
     public function result()
     {
         return 6;
@@ -142,7 +128,6 @@ class ContainerTestClassGetUsingDefine
 
 class ContainerTestClassConstructorParamDefaultValue
 {
-
     public $a;
 
     public function __construct(int $a = 50)
@@ -153,7 +138,6 @@ class ContainerTestClassConstructorParamDefaultValue
 
 class ContainerTestClassConstructorParamDefaultValueClass
 {
-
     public $a;
 
     public function __construct(ContainerTestClassWithoutConstructorParam $a = null)
@@ -164,7 +148,6 @@ class ContainerTestClassConstructorParamDefaultValueClass
 
 class ContainerTestDelegateParent
 {
-
     public function build()
     {
         return new \stdClass();
@@ -173,7 +156,6 @@ class ContainerTestDelegateParent
 
 class ContainerTestDelegate extends ContainerTestDelegateParent
 {
-
     public function create()
     {
         return new \stdClass();

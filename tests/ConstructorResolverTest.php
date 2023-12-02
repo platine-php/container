@@ -18,7 +18,6 @@ use Platine\Test\Fixture\ContainerTestClassNoPublicConstructor;
  */
 class ConstructorResolverTest extends PlatineTestCase
 {
-
     public function testResolveClassNotFound(): void
     {
         $this->expectException(ContainerException::class);

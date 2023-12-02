@@ -35,7 +35,6 @@ use stdClass;
  */
 class ContainerTest extends PlatineTestCase
 {
-
     public function testConstructionDefault(): void
     {
         $c = new Container();

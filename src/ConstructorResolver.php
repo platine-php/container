@@ -54,7 +54,6 @@ use ReflectionParameter;
 
 class ConstructorResolver implements ResolverInterface
 {
-
     /**
      * {@inheritdoc}
      */
@@ -110,10 +109,10 @@ class ConstructorResolver implements ResolverInterface
         ReflectionParameter $parameter,
         ?ParameterCollection $parameters = null
     ) {
-        $class = $parameter->getType() && !$parameter->getType()->isBuiltin() 
+        $class = $parameter->getType() && !$parameter->getType()->isBuiltin()
                 ? new ReflectionClass($parameter->getType()->getName())
                 : null;
-        
+
         //If the parameter is not a class
         if ($class === null) {
             if ($parameters !== null) {

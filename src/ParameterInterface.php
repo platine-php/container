@@ -51,7 +51,6 @@ use Platine\Container\ContainerInterface;
 
 interface ParameterInterface
 {
-
     /**
      * Return the name of the parameter
      *

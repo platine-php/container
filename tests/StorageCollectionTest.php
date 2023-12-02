@@ -17,7 +17,6 @@ use Platine\Dev\PlatineTestCase;
  */
 class StorageCollectionTest extends PlatineTestCase
 {
-
     public function testConstructorOneValueIsNotInstanceOfStorage(): void
     {
         $this->expectException(\InvalidArgumentException::class);

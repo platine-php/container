@@ -51,7 +51,6 @@ use Platine\Container\ContainerInterface;
 
 interface StorageInterface
 {
-
     /**
      * Return the name of the storage
      *

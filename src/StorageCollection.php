@@ -51,7 +51,6 @@ use InvalidArgumentException;
 
 class StorageCollection
 {
-
     /**
      * The array of storages
      * @var array<string, StorageInterface>
