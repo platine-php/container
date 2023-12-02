@@ -4,11 +4,11 @@
 [![Project Status](http://opensource.box.com/badges/active.svg)](http://opensource.box.com/badges)
 [![Latest Stable Version](https://poser.pugx.org/platine-php/container/v)](https://packagist.org/packages/platine-php/container)
 [![Latest Unstable Version](https://poser.pugx.org/platine-php/container/v/unstable)](https://packagist.org/packages/platine-php/container)
-[![License](https://poser.pugx.org/platine-php/container/license)](https://packagist.org/packages/platine-php/container)
-[![Build Status](https://img.shields.io/travis/platine-php/container/develop.svg?style=flat-square)](https://travis-ci.com/platine-php/container)  
+[![Total Downloads](https://poser.pugx.org/platine-php/container/downloads)](https://packagist.org/packages/platine-php/container)
+[![License](https://poser.pugx.org/platine-php/container/license)](https://packagist.org/packages/platine-php/container)  
 [![Quality Score](https://img.shields.io/scrutinizer/g/platine-php/container.svg?style=flat-square)](https://scrutinizer-ci.com/g/platine-php/container)
-[![Maintainability](https://api.codeclimate.com/v1/badges/339beefdf61c7cef7fd9/maintainability)](https://codeclimate.com/github/platine-php/container/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/339beefdf61c7cef7fd9/test_coverage)](https://codeclimate.com/github/platine-php/container/test_coverage)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/20d2e0e851a44b3dadb0493955b45b46)](https://app.codacy.com/gh/platine-php/container/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Coverage/20d2e0e851a44b3dadb0493955b45b46)](https://app.codacy.com/gh/platine-php/container/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)
 
 ### Requirements 
 - **PHP >= 7.4**, **PHP 8** 
@@ -19,9 +19,9 @@
 composer require platine-php/container
 ```
 
-
 ### License
 MIT License See [LICENSE.MD](LICENSE.MD)
 
-### Documentation 
-Coming soon, be patient
+
+### Resources
+- [Documentation](https://docs.platine-php.com/packages/container)
