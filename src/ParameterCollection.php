@@ -47,10 +47,10 @@ declare(strict_types=1);
 
 namespace Platine\Container;
 
-use InvalidArgumentException;
-use Platine\Container\ParameterCollection;
-use Platine\Container\ParameterInterface;
-
+/**
+ * @class ParameterCollection
+ * @package Platine\Container
+ */
 class ParameterCollection
 {
     /**
@@ -73,12 +73,6 @@ class ParameterCollection
     public function __construct(array $parameters = [])
     {
         foreach ($parameters as $parameter) {
-            if (!$parameter instanceof ParameterInterface) {
-                throw new InvalidArgumentException(sprintf(
-                    'The container parameter must be an instance of %s',
-                    ParameterInterface::class
-                ));
-            }
             $this->add($parameter);
         }
     }

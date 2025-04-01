@@ -49,27 +49,19 @@ namespace Platine\Container;
 
 use Closure;
 
+/**
+ * @class Parameter
+ * @package Platine\Container
+ */
 class Parameter implements ParameterInterface
 {
-    /**
-     * The parameter name
-     * @var string
-     */
-    protected string $name;
-
-    /**
-     * The parameter value
-     * @var Closure|mixed
-     */
-    protected $value;
-
     /**
      * Create new parameter
      *
      * @param string $name  the name of the parameter
-     * @param Closure|mixed $value the parameter value
+     * @param mixed $value the parameter value
      */
-    public function __construct(string $name, $value)
+    public function __construct(protected string $name, protected mixed $value)
     {
         $this->name = $name;
         $this->value = $value;
@@ -86,7 +78,7 @@ class Parameter implements ParameterInterface
     /**
      * {@inheritdoc}
      */
-    public function getValue(ContainerInterface $container)
+    public function getValue(ContainerInterface $container): mixed
     {
         return ($this->value instanceof Closure) ? ($this->value)($container) : $this->value;
     }

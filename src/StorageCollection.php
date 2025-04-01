@@ -47,37 +47,32 @@ declare(strict_types=1);
 
 namespace Platine\Container;
 
-use InvalidArgumentException;
-
+/**
+ * @class StorageCollection
+ * @package Platine\Container
+ */
 class StorageCollection
 {
     /**
-     * The array of storages
+     * The array of storage
      * @var array<string, StorageInterface>
      */
     protected array $storages = [];
 
     /**
-     * The array of all of the container storages
+     * The array of all of the container storage
      * @var StorageInterface[]
      */
-    protected $all = [];
+    protected array $all = [];
 
     /**
-     * Create new collection of storages
+     * Create new collection of storage
      *
-     * @param StorageInterface[] $storages  the container storages
+     * @param StorageInterface[] $storages  the container storage
      */
     public function __construct(array $storages = [])
     {
         foreach ($storages as $storage) {
-            if (!$storage instanceof StorageInterface) {
-                throw new InvalidArgumentException(sprintf(
-                    'The container storage must be an instance of %s',
-                    StorageInterface::class
-                ));
-            }
-
             $this->add($storage);
         }
     }
@@ -93,8 +88,8 @@ class StorageCollection
     }
 
     /**
-     * Return all array of container storages
-     * @return StorageInterface[] the collection of storages
+     * Return all array of container storage
+     * @return StorageInterface[] the collection of storage
      */
     public function all(): array
     {

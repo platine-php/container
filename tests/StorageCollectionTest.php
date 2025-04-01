@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Platine\Test\Container;
 
-use Platine\Container\Container;
 use Platine\Container\Storage;
 use Platine\Container\StorageCollection;
 use Platine\Dev\PlatineTestCase;
@@ -17,12 +16,6 @@ use Platine\Dev\PlatineTestCase;
  */
 class StorageCollectionTest extends PlatineTestCase
 {
-    public function testConstructorOneValueIsNotInstanceOfStorage(): void
-    {
-        $this->expectException(\InvalidArgumentException::class);
-        $c = new StorageCollection(array('foo'));
-    }
-
     public function testConstructorParamContainsListOfStorage(): void
     {
         $name = 'foo';

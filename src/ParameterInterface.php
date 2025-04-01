@@ -49,6 +49,10 @@ namespace Platine\Container;
 
 use Platine\Container\ContainerInterface;
 
+/**
+ * @class ParameterInterface
+ * @package Platine\Container
+ */
 interface ParameterInterface
 {
     /**
@@ -63,5 +67,5 @@ interface ParameterInterface
      * @param  ContainerInterface $container
      * @return mixed the parameter value
      */
-    public function getValue(ContainerInterface $container);
+    public function getValue(ContainerInterface $container): mixed;
 }

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Platine\Test\Container;
 
-use Platine\Container\ConstructorResolver;
 use Platine\Container\Container;
 use Platine\Container\Exception\ContainerException;
 use Platine\Container\Exception\NotFoundException;
+use Platine\Container\Resolver\ConstructorResolver;
 use Platine\Container\StorageCollection;
 use Platine\Dev\PlatineTestCase;
 use Platine\Test\Fixture\ContainerTestAbstractClass;
@@ -60,9 +60,9 @@ class ContainerTest extends PlatineTestCase
     {
         $sc = new StorageCollection();
         $c = new Container();
-        $c->setStorages($sc);
+        $c->setStorage($sc);
         $this->assertInstanceOf(StorageCollection::class, $sc);
-        $this->assertEquals($sc, $c->getStorages());
+        $this->assertEquals($sc, $c->getStorage());
     }
 
     public function testClone(): void

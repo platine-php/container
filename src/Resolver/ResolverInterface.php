@@ -45,11 +45,15 @@
 
 declare(strict_types=1);
 
-namespace Platine\Container;
+namespace Platine\Container\Resolver;
 
 use Platine\Container\ContainerInterface;
 use Platine\Container\ParameterCollection;
 
+/**
+ * @class ResolverInterface
+ * @package Platine\Container\Resolver
+ */
 interface ResolverInterface
 {
     /**
@@ -65,5 +69,5 @@ interface ResolverInterface
         ContainerInterface $container,
         string $type,
         ?ParameterCollection $parameters = null
-    );
+    ): mixed;
 }

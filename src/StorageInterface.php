@@ -49,6 +49,10 @@ namespace Platine\Container;
 
 use Platine\Container\ContainerInterface;
 
+/**
+ * @class StorageInterface
+ * @package Platine\Container
+ */
 interface StorageInterface
 {
     /**
@@ -69,5 +73,5 @@ interface StorageInterface
      * @param  ContainerInterface $container
      * @return mixed
      */
-    public function getInstance(ContainerInterface $container);
+    public function getInstance(ContainerInterface $container): mixed;
 }

@@ -11,8 +11,19 @@ abstract class ContainerTestAbstractClass
     }
 }
 
-final class ContainerTesFinalClass
+final class ContainerTestFinalClass
 {
+}
+
+class ContainerReflectionParamClass
+{
+    public function foo($a): void
+    {
+    }
+
+    public function bar(int|float $a): void
+    {
+    }
 }
 
 class ContainerTestClass

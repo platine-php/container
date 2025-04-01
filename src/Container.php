@@ -51,7 +51,13 @@ namespace Platine\Container;
 use Closure;
 use Platine\Container\Exception\ContainerException;
 use Platine\Container\Exception\NotFoundException;
+use Platine\Container\Resolver\ConstructorResolver;
+use Platine\Container\Resolver\ResolverInterface;
 
+/**
+ * @class Container
+ * @package Platine\Container
+ */
 class Container implements ContainerInterface
 {
     /**
@@ -70,7 +76,7 @@ class Container implements ContainerInterface
      * The Storage collection instance
      * @var StorageCollection
      */
-    protected StorageCollection $storages;
+    protected StorageCollection $storage;
 
     /**
      * The list of resolved instances
@@ -90,8 +96,7 @@ class Container implements ContainerInterface
     public function __construct()
     {
         $this->resolver =  new ConstructorResolver();
-        $this->storages =  new StorageCollection();
-        self::$instance = $this;
+        $this->storage =  new StorageCollection();
     }
 
     /**
@@ -108,24 +113,24 @@ class Container implements ContainerInterface
 
     /**
      *
-     * @param StorageCollection $storages
+     * @param StorageCollection $storage
      * @return $this
      */
-    public function setStorages(StorageCollection $storages): self
+    public function setStorage(StorageCollection $storage): self
     {
-        $this->storages = $storages;
+        $this->storage = $storage;
 
         return $this;
     }
 
     /**
      * Return the global instance of the container
-     * @return $this
+     * @return self
      */
     public static function getInstance(): self
     {
         if (static::$instance === null) {
-            static::$instance = new static();
+            static::$instance = new self();
         }
 
         return static::$instance;
@@ -135,7 +140,7 @@ class Container implements ContainerInterface
      * Remove all lock when copy this object
      * @return void
      */
-    public function __clone()
+    public function __clone(): void
     {
         $this->lock = [];
     }
@@ -153,9 +158,9 @@ class Container implements ContainerInterface
      * Return the storage collection instance
      * @return StorageCollection
      */
-    public function getStorages(): StorageCollection
+    public function getStorage(): StorageCollection
     {
-        return $this->storages;
+        return $this->storage;
     }
 
     /**
@@ -179,7 +184,7 @@ class Container implements ContainerInterface
      */
     public function bind(
         string $id,
-        $type = null,
+        mixed $type = null,
         array $parameters = [],
         bool $shared = false
     ): StorageInterface {
@@ -187,9 +192,9 @@ class Container implements ContainerInterface
         unset($this->instances[$id]);
 
         /** @var mixed */
-        $type = $type ? $type : $id;
-        if (!($type instanceof Closure)) {
-            $type = $this->getClosure($type);
+        $resolvedType = $type ?? $id;
+        if (!($resolvedType instanceof Closure)) {
+            $resolvedType = $this->getClosure($resolvedType);
         }
 
         $params = [];
@@ -197,16 +202,16 @@ class Container implements ContainerInterface
             $params[] = new Parameter($name, $value);
         }
 
-        return $this->storages->add(new Storage(
+        return $this->storage->add(new Storage(
             $id,
-            $type,
+            $resolvedType,
             $shared,
             !empty($params) ? new ParameterCollection($params) : null
         ));
     }
 
     /**
-     * Set the new instance in to the contaner
+     * Set the new instance in to the container
      * @param  object  $instance the instance to set
      * @param  string|null $id  the id of the instance. If null will try
      * to detect the type using get_class()
@@ -217,7 +222,7 @@ class Container implements ContainerInterface
         if ($id === null) {
             $id = get_class($instance);
         }
-        $this->storages->delete($id);
+        $this->storage->delete($id);
         $this->instances[$id] = $instance;
     }
 
@@ -228,7 +233,7 @@ class Container implements ContainerInterface
      * @param  array<string, mixed>  $parameters
      * @return StorageInterface
      */
-    public function share(string $id, $type = null, array $parameters = []): StorageInterface
+    public function share(string $id, mixed $type = null, array $parameters = []): StorageInterface
     {
         return $this->bind($id, $type, $parameters, true);
     }
@@ -238,7 +243,7 @@ class Container implements ContainerInterface
      */
     public function has(string $id): bool
     {
-        return isset($this->instances[$id]) || $this->storages->has($id);
+        return isset($this->instances[$id]) || $this->storage->has($id);
     }
 
     /**
@@ -251,7 +256,7 @@ class Container implements ContainerInterface
      * @param  array<string, mixed>  $parameters
      * @return mixed
      */
-    public function make(string $id, array $parameters = [])
+    public function make(string $id, array $parameters = []): mixed
     {
         if (isset($this->lock[$id])) {
             throw new ContainerException(sprintf(
@@ -259,26 +264,30 @@ class Container implements ContainerInterface
                 $id
             ));
         }
+
         $this->lock[$id] = count($this->lock);
 
-        if (!$this->has($id)) {
+        if ($this->has($id) === false) {
             $this->bind($id, null, $parameters, false);
         }
 
         if (isset($this->instances[$id])) {
             unset($this->lock[$id]);
+
             return $this->instances[$id];
         }
 
-        /** @var mixed */
-        $instance = $this->storages
-                ->get($id)
-                ->getInstance($this);
+        $instance = null;
+        $result = $this->storage->get($id);
+        if ($result !== null) {
+            /** @var mixed */
+            $instance = $result->getInstance($this);
 
-        if ($this->storages->get($id)->isShared()) {
-            $this->instances[$id] = $instance;
+            if ($result->isShared()) {
+                $this->instances[$id] = $instance;
+            }
+            unset($this->lock[$id]);
         }
-        unset($this->lock[$id]);
 
         return $instance;
     }
@@ -286,9 +295,9 @@ class Container implements ContainerInterface
     /**
      * {@inheritdoc}
      */
-    public function get(string $id)
+    public function get(string $id): mixed
     {
-        if (!$this->has($id)) {
+        if ($this->has($id) === false) {
             throw new NotFoundException(sprintf('The type/class [%s] does not exist in the container!', $id));
         }
 
@@ -297,10 +306,10 @@ class Container implements ContainerInterface
 
     /**
      * Return the closure for the given type
-     * @param  string|mixed $type
+     * @param  mixed $type
      * @return Closure
      */
-    protected function getClosure($type): Closure
+    protected function getClosure(mixed $type): Closure
     {
         if (is_callable($type)) {
             return Closure::fromCallable($type);
@@ -311,9 +320,8 @@ class Container implements ContainerInterface
         }
 
         return function ($container, $parameters) use ($type) {
-            return $container
-                    ->getResolver()
-                    ->resolve($container, $type, $parameters);
+            return $container->getResolver()
+                             ->resolve($container, $type, $parameters);
         };
     }
 }

@@ -52,6 +52,10 @@ namespace Platine\Container;
 use Platine\Container\Exception\ContainerException;
 use Platine\Container\Exception\NotFoundException;
 
+/**
+ * @class ContainerInterface
+ * @package Platine\Container
+ */
 interface ContainerInterface
 {
     /**
@@ -62,9 +66,9 @@ interface ContainerInterface
      * @throws NotFoundException  No entry was found for **this** identifier.
      * @throws ContainerException Error while retrieving the entry.
      *
-     * @return mixed Entry.
+     * @return mixed
      */
-    public function get(string $id);
+    public function get(string $id): mixed;
 
     /**
      * Returns true if the container can return an entry for the given identifier.

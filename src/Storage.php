@@ -53,6 +53,10 @@ use Platine\Container\Parameter;
 use Platine\Container\ParameterCollection;
 use Platine\Container\StorageInterface;
 
+/**
+ * @class Storage
+ * @package Platine\Container
+ */
 class Storage implements StorageInterface
 {
     /**
@@ -96,7 +100,7 @@ class Storage implements StorageInterface
         $this->name = $name;
         $this->closure = $closure;
         $this->shared = $shared;
-        $this->parameters = $parameters ? $parameters : new ParameterCollection();
+        $this->parameters = $parameters ?? new ParameterCollection();
     }
 
     /**
@@ -118,7 +122,7 @@ class Storage implements StorageInterface
     /**
      * {@inheritdoc}
      */
-    public function getInstance(ContainerInterface $container)
+    public function getInstance(ContainerInterface $container): mixed
     {
         return ($this->closure)($container, $this->parameters);
     }
@@ -147,11 +151,11 @@ class Storage implements StorageInterface
      * Bind the parameter to use for the managed instance
      *
      * @param string $name  the name of parameter
-     * @param Closure|mixed $value the parameter value
+     * @param mixed $value the parameter value
      *
-     * @return self
+     * @return $this
      */
-    public function bindParameter(string $name, $value): self
+    public function bindParameter(string $name, mixed $value): self
     {
         $this->parameters->add(new Parameter($name, $value));
         return $this;

@@ -45,13 +45,21 @@
 
 declare(strict_types=1);
 
-namespace Platine\Container;
+namespace Platine\Container\Resolver;
 
+use Platine\Container\ContainerInterface;
 use Platine\Container\Exception\ContainerException;
+use Platine\Container\ParameterCollection;
 use ReflectionClass;
 use ReflectionException;
+use ReflectionNamedType;
 use ReflectionParameter;
+use ReflectionUnionType;
 
+/**
+ * @class ConstructorResolver
+ * @package Platine\Container\Resolver
+ */
 class ConstructorResolver implements ResolverInterface
 {
     /**
@@ -61,7 +69,7 @@ class ConstructorResolver implements ResolverInterface
         ContainerInterface $container,
         string $type,
         ?ParameterCollection $parameters = null
-    ) {
+    ): mixed {
         try {
             $class = new ReflectionClass($type);
         } catch (ReflectionException $e) {
@@ -109,19 +117,26 @@ class ConstructorResolver implements ResolverInterface
         ReflectionParameter $parameter,
         ?ParameterCollection $parameters = null
     ) {
-        $class = $parameter->getType() && !$parameter->getType()->isBuiltin()
-                ? new ReflectionClass($parameter->getType()->getName())
-                : null;
+        $class = null;
+        $types = $this->getTypes($parameter);
+
+        // TODO: we can have more than one type, so we take only the first one
+        if (count($types) > 0 && $types[0]->isBuiltin() === false) {
+            $class = new ReflectionClass($types[0]->getName());
+        }
 
         //If the parameter is not a class
         if ($class === null) {
             if ($parameters !== null) {
-                if ($parameters->has($parameter->name)) {
-                    return $parameters
-                                    ->get($parameter->name)
-                                    ->getValue($container);
+                if (
+                        $parameters->has($parameter->name) &&
+                        $parameters->get($parameter->name) !== null
+                ) {
+                    return $parameters->get($parameter->name)
+                                       ->getValue($container);
                 }
             }
+
             if ($parameter->isDefaultValueAvailable()) {
                 try {
                     return $parameter->getDefaultValue();
@@ -141,5 +156,31 @@ class ConstructorResolver implements ResolverInterface
         }
 
         return $container->get($class->name);
+    }
+
+    /**
+     * Return the types of the given parameter
+     * @param ReflectionParameter $parameter
+     * @return ReflectionNamedType[]
+     */
+    protected function getTypes(ReflectionParameter $parameter): array
+    {
+        if ($parameter->getType() === null) {
+            return [];
+        }
+
+        $type = $parameter->getType();
+        $types = [];
+        if ($type instanceof ReflectionNamedType) {
+            $types = [$type];
+        }
+
+        if ($type instanceof ReflectionUnionType) {
+            /** @var ReflectionNamedType[] $namedTypes */
+            $namedTypes = $type->getTypes();
+            $types = $namedTypes;
+        }
+
+        return $types;
     }
 }
