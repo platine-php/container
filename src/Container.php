@@ -206,7 +206,7 @@ class Container implements ContainerInterface
             $id,
             $resolvedType,
             $shared,
-            !empty($params) ? new ParameterCollection($params) : null
+            count($params) > 0 ? new ParameterCollection($params) : null
         ));
     }
 
@@ -313,7 +313,7 @@ class Container implements ContainerInterface
     {
         if (is_callable($type)) {
             return Closure::fromCallable($type);
-        } elseif (!is_string($type)) {
+        } elseif (is_string($type) === false) {
             return function () use ($type) {
                 return $type;
             };

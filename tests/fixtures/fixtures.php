@@ -4,6 +4,38 @@ declare(strict_types=1);
 
 namespace Platine\Test\Fixture;
 
+use ReflectionException;
+use stdClass;
+
+class ClassConstructorThrowException
+{
+    public function __construct()
+    {
+        throw new ReflectionException();
+    }
+}
+
+
+class ClassUnionOne
+{
+    public function __construct(public int $a)
+    {
+    }
+}
+
+class ClassUnionTwo
+{
+    public ClassUnionOne $a;
+    public function __construct(null|ClassUnionOne|string $a = null)
+    {
+        if (is_null($a) || is_string($a)) {
+            $a = new ClassUnionOne(50);
+        }
+
+        $this->a = $a;
+    }
+}
+
 abstract class ContainerTestAbstractClass
 {
     public function __construct()
@@ -161,7 +193,7 @@ class ContainerTestDelegateParent
 {
     public function build()
     {
-        return new \stdClass();
+        return new stdClass();
     }
 }
 
@@ -169,21 +201,21 @@ class ContainerTestDelegate extends ContainerTestDelegateParent
 {
     public function create()
     {
-        return new \stdClass();
+        return new stdClass();
     }
 
     public function __invoke()
     {
-        return new \stdClass();
+        return new stdClass();
     }
 
     public static function factory()
     {
-        return new \stdClass();
+        return new stdClass();
     }
 }
 
 function container_delegate($c, $p)
 {
-    return new \stdClass();
+    return new stdClass();
 }

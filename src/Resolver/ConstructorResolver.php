@@ -76,7 +76,7 @@ class ConstructorResolver implements ResolverInterface
             throw new ContainerException($e->getMessage());
         }
 
-        if (!$class->isInstantiable()) {
+        if ($class->isInstantiable() === false) {
             throw new ContainerException(sprintf('Type/class [%s] is not instantiable!', $type));
         }
 
@@ -118,11 +118,26 @@ class ConstructorResolver implements ResolverInterface
         ?ParameterCollection $parameters = null
     ): mixed {
         $class = null;
+        $className = null;
         $types = $this->getTypes($parameter);
 
-        // TODO: we can have more than one type, so we take only the first one
-        if (count($types) > 0 && $types[0]->isBuiltin() === false) {
-            $class = new ReflectionClass($types[0]->getName());
+        // TODO: handle for union types
+        if (count($types) > 1) {
+            foreach ($types as /** @var ReflectionNamedType $type */ $type) {
+                $name = $type->getName();
+                if ($type->isBuiltin() === false && $container->has($name)) {
+                    $className = $name;
+                    break;
+                }
+            }
+        } else {
+            if ($types[0]->isBuiltin() === false) {
+                $className = $types[0]->getName();
+            }
+        }
+
+        if ($className !== null) {
+            $class = new ReflectionClass($className);
         }
 
         //If the parameter is not a class

@@ -10,6 +10,9 @@ use Platine\Container\Exception\NotFoundException;
 use Platine\Container\Resolver\ConstructorResolver;
 use Platine\Container\StorageCollection;
 use Platine\Dev\PlatineTestCase;
+use Platine\Test\Fixture\ClassConstructorThrowException;
+use Platine\Test\Fixture\ClassUnionOne;
+use Platine\Test\Fixture\ClassUnionTwo;
 use Platine\Test\Fixture\ContainerTestAbstractClass;
 use Platine\Test\Fixture\ContainerTestClass;
 use Platine\Test\Fixture\ContainerTestClassConstructorParamDefaultValue;
@@ -247,6 +250,34 @@ class ContainerTest extends PlatineTestCase
         $c->bind(ContainerTestClassWithoutConstructorParam::class);
         $o = $c->get(ContainerTestClassWithoutConstructorParam::class);
         $this->assertInstanceOf(ContainerTestClassWithoutConstructorParam::class, $o);
+    }
+
+    public function testNewInstanceArgsError(): void
+    {
+        $c = new Container();
+        $c->bind(ClassConstructorThrowException::class);
+
+        $this->expectException(ContainerException::class);
+        $c->get(ClassConstructorThrowException::class);
+    }
+
+    public function testGetUnionTypeOne(): void
+    {
+        $c = new Container();
+        $c->bind('union', ClassUnionTwo::class);
+        $o = $c->get('union');
+        $this->assertInstanceOf(ClassUnionTwo::class, $o);
+        $this->assertEquals(50, $o->a->a);
+    }
+
+    public function testGetUnionTypeTwo(): void
+    {
+        $c = new Container();
+        $c->bind('union', ClassUnionTwo::class);
+        $c->bind(ClassUnionOne::class, new ClassUnionOne(4));
+        $o = $c->get('union');
+        $this->assertInstanceOf(ClassUnionTwo::class, $o);
+        $this->assertEquals(4, $o->a->a);
     }
 
     public function testGetUsingAbstractClass(): void
