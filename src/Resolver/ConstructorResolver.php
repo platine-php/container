@@ -116,7 +116,7 @@ class ConstructorResolver implements ResolverInterface
         ContainerInterface $container,
         ReflectionParameter $parameter,
         ?ParameterCollection $parameters = null
-    ) {
+    ): mixed {
         $class = null;
         $types = $this->getTypes($parameter);
 

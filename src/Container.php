@@ -130,7 +130,7 @@ class Container implements ContainerInterface
     public static function getInstance(): self
     {
         if (static::$instance === null) {
-            static::$instance = new self();
+            static::$instance = new static();
         }
 
         return static::$instance;
