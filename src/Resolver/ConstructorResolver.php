@@ -122,17 +122,13 @@ class ConstructorResolver implements ResolverInterface
         $types = $this->getTypes($parameter);
 
         // TODO: handle for union types
-        if (count($types) > 1) {
+        if (count($types) > 0) {
             foreach ($types as /** @var ReflectionNamedType $type */ $type) {
                 $name = $type->getName();
                 if ($type->isBuiltin() === false && $container->has($name)) {
                     $className = $name;
                     break;
                 }
-            }
-        } else {
-            if ($types[0]->isBuiltin() === false) {
-                $className = $types[0]->getName();
             }
         }
 
