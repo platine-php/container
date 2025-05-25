@@ -97,6 +97,8 @@ class Container implements ContainerInterface
     {
         $this->resolver =  new ConstructorResolver();
         $this->storage =  new StorageCollection();
+        
+        static::$instance = $this;
     }
 
     /**
@@ -130,7 +132,7 @@ class Container implements ContainerInterface
     public static function getInstance(): self
     {
         if (static::$instance === null) {
-            static::$instance = new static();
+            static::$instance = new self();
         }
 
         return static::$instance;
