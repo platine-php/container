@@ -97,7 +97,7 @@ class Container implements ContainerInterface
     {
         $this->resolver =  new ConstructorResolver();
         $this->storage =  new StorageCollection();
-        
+
         static::$instance = $this;
     }
 

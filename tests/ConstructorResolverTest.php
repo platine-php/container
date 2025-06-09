@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Platine\Test\Container;
 
 use Platine\Container\Container;
-use Platine\Dev\PlatineTestCase;
 use Platine\Container\Exception\ContainerException;
+use Platine\Container\Exception\NotFoundException;
 use Platine\Container\Resolver\ConstructorResolver;
+use Platine\Dev\PlatineTestCase;
 use Platine\Test\Fixture\ContainerReflectionParamClass;
+use Platine\Test\Fixture\ContainerTestClassCyclicOne;
 use Platine\Test\Fixture\ContainerTestClassNoPublicConstructor;
 use ReflectionMethod;
 
@@ -25,6 +27,13 @@ class ConstructorResolverTest extends PlatineTestCase
         $this->expectException(ContainerException::class);
         $c = new ConstructorResolver();
         $c->resolve(new Container(), 'not_found_class');
+    }
+
+    public function testResolveClassDepNotFound(): void
+    {
+        $this->expectException(NotFoundException::class);
+        $c = new ConstructorResolver();
+        $c->resolve(new Container(), ContainerTestClassCyclicOne::class);
     }
 
     public function testResolveClassConstructorIsNotPublic(): void

@@ -49,6 +49,7 @@ namespace Platine\Container\Resolver;
 
 use Platine\Container\ContainerInterface;
 use Platine\Container\Exception\ContainerException;
+use Platine\Container\Exception\NotFoundException;
 use Platine\Container\ParameterCollection;
 use ReflectionClass;
 use ReflectionException;
@@ -161,6 +162,13 @@ class ConstructorResolver implements ResolverInterface
                 // but has no default value available through reflection. Specifically, PDO exhibits
                 // this behavior.
                 return null;
+            }
+
+            if (count($types) === 1 && $types[0]->isBuiltin() === false) {
+                throw new NotFoundException(sprintf(
+                    'The type/class [%s] does not exist in the container!',
+                    $types[0]->getName()
+                ));
             }
 
             throw new ContainerException(sprintf('Parameter [%s] is not bound!', $parameter->name));
